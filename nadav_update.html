@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עדכון קהילה — נדב</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; direction: rtl; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; }
+.wrap { padding: 1.5rem 1rem; max-width: 720px; margin: 0 auto; }
+.header { margin-bottom: 1.5rem; }
+.header h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+.header p { font-size: 14px; color: #666; }
+.progress-bar-wrap { margin-bottom: 1.25rem; }
+.progress-label { font-size: 12px; color: #666; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.progress-track { height: 5px; background: #ddd; border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: #1D9E75; border-radius: 99px; transition: width 0.3s; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.tab { font-size: 13px; padding: 5px 12px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: #fff; color: #555; transition: all 0.15s; }
+.tab:hover { background: #f0f0ee; }
+.tab.active { background: #1D9E75; color: #fff; border-color: #1D9E75; font-weight: 600; }
+.filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+.filter-bar label { font-size: 13px; color: #666; }
+.filter-bar select { font-size: 13px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 8px; background: #fff; color: #1a1a1a; direction: rtl; }
+.count-badge { font-size: 12px; background: #eee; color: #666; padding: 2px 8px; border-radius: 99px; margin-right: auto; }
+.timeline { display: flex; flex-direction: column; gap: 10px; }
+.entry { border: 1px solid #e0e0de; border-radius: 12px; overflow: hidden; background: #fff; transition: opacity 0.2s; }
+.entry.read { opacity: 0.55; }
+.entry-header { display: flex; align-items: center; padding: 11px 14px; gap: 10px; direction: rtl; }
+.entry-header:hover { background: #f9f9f7; }
+.check-btn { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #ccc; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; font-size: 13px; color: transparent; }
+.check-btn:hover { border-color: #1D9E75; background: #e1f5ee; }
+.check-btn.checked { background: #1D9E75; border-color: #1D9E75; color: #fff; }
+.entry-right { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; cursor: pointer; }
+.topic-badge { font-size: 11px; padding: 3px 8px; border-radius: 99px; font-weight: 600; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+.badge-tech { background: #ddeeff; color: #1a5fa5; }
+.badge-biz { background: #ddf2e6; color: #1a6b3a; }
+.badge-tool { background: #edeeff; color: #4a3db7; }
+.badge-personal { background: #fef3dd; color: #8a5200; }
+.badge-course { background: #d9f2ec; color: #0a6b50; }
+.badge-spirit { background: #fde8f0; color: #992255; }
+.entry-meta { flex: 1; min-width: 0; text-align: right; }
+.entry-date { font-size: 11px; color: #999; display: block; margin-bottom: 1px; }
+.entry-title { font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 1.4; display: block; }
+.entry-summary { font-size: 13px; color: #666; margin-top: 3px; line-height: 1.5; display: block; }
+.read-tag { font-size: 10px; color: #1D9E75; font-weight: 600; margin-top: 3px; display: none; }
+.entry.read .read-tag { display: block; }
+.chevron { font-size: 11px; color: #aaa; cursor: pointer; padding: 4px; flex-shrink: 0; transition: transform 0.2s; user-select: none; }
+.chevron.open { transform: rotate(180deg); }
+.entry-body { display: none; padding: 0 14px 14px; border-top: 1px solid #eee; direction: rtl; }
+.entry-body.visible { display: block; }
+.msg-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.msg { display: flex; gap: 8px; align-items: flex-start; direction: rtl; }
+.msg-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.msg-content { flex: 1; min-width: 0; text-align: right; }
+.msg-author { font-size: 11px; font-weight: 700; color: #555; margin-bottom: 2px; }
+.msg-text { font-size: 13px; color: #222; line-height: 1.6; }
+.no-results { font-size: 14px; color: #888; text-align: center; padding: 2rem; }
+</style>
+</head>
+<body>
+<div class="wrap" dir="rtl">
+  <div class="header">
+    <h1>עדכון קהילה — חודש אחרון</h1>
+    <p>19.2.26 – 19.3.26 &nbsp;|&nbsp; מה שפספסת, נדב. לחץ ✓ על מה שקראת.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span>התקדמות קריאה</span>
+      <span id="prog-text">0 / 31</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="filterTopic('all',this)">הכל</button>
+    <button class="tab" onclick="filterTopic('tech',this)">טכנולוגיה</button>
+    <button class="tab" onclick="filterTopic('tool',this)">כלים חדשים</button>
+    <button class="tab" onclick="filterTopic('biz',this)">עסקי</button>
+    <button class="tab" onclick="filterTopic('course',this)">עדכוני קורס</button>
+    <button class="tab" onclick="filterTopic('spirit',this)">רוח ומצב</button>
+    <button class="tab" onclick="filterTopic('personal',this)">אישי</button>
+  </div>
+
+  <div class="filter-bar">
+    <label>מיון:</label>
+    <select onchange="sortEntries(this.value)">
+      <option value="asc">ישן לחדש</option>
+      <option value="desc">חדש לישן</option>
+    </select>
+    <span class="count-badge" id="count-badge">31 נושאים</span>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+  <div class="no-results" id="no-results" style="display:none">אין תוצאות לפילטר זה</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'nadav_read_v1';
+function loadRead() { try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')); } catch(e) { return new Set(); } }
+function saveRead(s) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...s])); } catch(e) {} }
+let readSet = loadRead();
+
+const AV = {
+  'יניב בן לולו':   { bg:'#ddeeff', c:'#185FA5', i:'יב' },
+  'ניצן טהר לב':    { bg:'#d9f2ec', c:'#0F6E56', i:'נט' },
+  'אלמוג פישלר':    { bg:'#edeeff', c:'#534AB7', i:'אפ' },
+  'אריה נרברג':     { bg:'#fef3dd', c:'#854F0B', i:'אנ' },
+  'ארז טל-שיר':     { bg:'#fde8f0', c:'#993556', i:'את' },
+  'גיא':            { bg:'#ddf2e6', c:'#3B6D11', i:'גי' },
+  'שירי מור אייזן': { bg:'#fde8e4', c:'#993C1D', i:'שמ' },
+  'ליאור סבג':      { bg:'#ddeeff', c:'#0C447C', i:'לס' },
+  'אבירם אביטבול':  { bg:'#ddf2e6', c:'#27500A', i:'אב' },
+  'אהרון':          { bg:'#fef3dd', c:'#633806', i:'אה' },
+  'רומן':           { bg:'#edeeff', c:'#3C3489', i:'רו' },
+  'ענת':            { bg:'#d9f2ec', c:'#085041', i:'ען' },
+  'שמואל':          { bg:'#ffeaea', c:'#A32D2D', i:'של' },
+  'דורון':          { bg:'#fef3dd', c:'#854F0B', i:'דו' },
+  'נדב':            { bg:'#ddeeff', c:'#185FA5', i:'נד' },
+  'נועם':           { bg:'#edeeff', c:'#3C3489', i:'נמ' },
+  'שני':            { bg:'#fde8f0', c:'#993556', i:'שנ' },
+  'עדן':            { bg:'#d9f2ec', c:'#0F6E56', i:'עד' },
+  'גלי':            { bg:'#ddf2e6', c:'#3B6D11', i:'גל' },
+  'שי':             { bg:'#fef3dd', c:'#854F0B', i:'שי' },
+  'יצחק נורי':      { bg:'#ddeeff', c:'#185FA5', i:'ינ' },
+  'default':        { bg:'#eee',    c:'#666',    i:'??' }
+};
+
+function av(name) {
+  const k = Object.keys(AV).find(k => name.startsWith(k)) || 'default';
+  const a = AV[k];
+  return `<div class="msg-avatar" style="background:${a.bg};color:${a.c}">${a.i}</div>`;
+}
+
+const ENTRIES = [
+  {id:1,date:'19.2.26',topic:'tech',title:'WhatsApp רשמי — חוקים, עלויות ו-OPT-IN',summary:'רומן שאל שאלות מקיפות על הקמת בוט WhatsApp. קיבל מדריך שלב-שלב מפורט.',msgs:[{a:'רומן',t:'שאלה על כל הדברים הקטנים במטא — OPTIN, חוק ספאם, עלויות, ספקים.'},{a:'אלמוג פישלר',t:'בחלון 24 שעות מהודעה נכנסת — שיחה חופשית. מעבר לזה — חובה תבנית מאושרת.'},{a:'אבירם אביטבול',t:'חוק ספאם = 2 כללים: (1) אל תשלח ללא אישור כתוב. (2) אפשר תמיד הסרה.'},{a:'יניב בן לולו',t:'מטא מחייבת תשלום על כל שיחה יזומה (כ-0.1 ש"ח). חובה לציין מי פונה ואיך להסיר.'},{a:'רומן',t:'פרסם מדריך מקצועי מלא: 6 שלבים — בחירת מספר, OPT-IN משפטי, הגדרת BSP, תבניות, לוגיקה ב-Make, עלויות.'}]},
+  {id:2,date:'19.2.26',topic:'tool',title:'מאניצ\'אט vs צ\'אטרייס — השוואה מפורטת',summary:'אלמוג שאל, יניב ואבירם ענו עם השוואה מעמיקה בין שתי פלטפורמות WhatsApp.',msgs:[{a:'אלמוג פישלר',t:'מאניצ\'אט מול צ\'אטרייס — מי ניסה? יש לי קהל גדל ואני בוחר פלטפורמה.'},{a:'יניב בן לולו',t:'שתיהן כמעט זהות. מעדיף מאניצ\'אט בגלל הממשק. צ\'אטרייס רק לקרוסלות ושליחת אנשי קשר.'},{a:'אבירם אביטבול',t:'מאניצ\'אט: נוח, המתנה בסנריו, ניהול טמפלייטים. צ\'אטרייס: קרוסלות, A/B testing, יותר טריגרים. למתחילים — מאניצ\'אט.'}]},
+  {id:3,date:'20.2.26',topic:'tool',title:'ייצוא שיחות WhatsApp לגוגל AI Studio',summary:'גיא גילה ששלח קבוצה שלמה ל-Google AI Studio לסיכום. כולם התלהבו.',msgs:[{a:'גיא',t:'לא עברתי על הודעות חצי שנה — שלחתי את כולן ל-Google AI Studio שיסכם לי.'},{a:'ארז טל-שיר',t:'שינית לי את החיים. כמות הדברים שאפשר לנתח ככה משוגעת.'},{a:'גיא',t:'זה פיצ\'ר וואטסאפ מוכר — ייצוא שיחה לקובץ. מנהלי קבוצות יכולים לחסום.'}]},
+  {id:4,date:'21.2.26',topic:'personal',title:'ישראל #1 בעולם בשימוש בקלוד',summary:'אלמוג שיתף: ישראל במקום ראשון בעולם בשימוש במוצרי אנטרופיק.',msgs:[{a:'אלמוג פישלר',t:'ישראל במקום הראשון בעולם בשימוש במוצרי אנטרופיק (קלוד).'},{a:'ליאור סבג',t:'בסופ"ש הזה זה רק אנחנו.'}]},
+  {id:5,date:'22.2.26',topic:'biz',title:'דורון בנה אתר לאשתו עם קלוד קוד — 3 שעות, אפס קוד',summary:'ללא שורת קוד אחת. קיבל פידבק על באגים קטנים.',msgs:[{a:'דורון',t:'בניתי לשני אשתי עמוד לעסק שלה עם קלוד קוד. לא כתבתי שורת קוד, לקח 2-3 שעות.'},{a:'ליאור סבג',t:'נראה מעולה. 2 דברים: תפריט המבורגר כיוון לא נכון; קרוסלת ווידאו לא מסונכרנת עם האינדיקטור.'}]},
+  {id:6,date:'22.2.26',topic:'biz',title:'הודעות קרות לעסקים — מה עובד?',summary:'יצחק שאל. כולם ממליצים לינקדאין + פייסבוק, מהפרופיל האישי.',msgs:[{a:'יצחק נורי',t:'שלחתם הודעות קרות לעסקים? דרך פרופיל אישי או עסקי?'},{a:'גלי (52-686-5865)',t:'הפלטפורמה לעסקים עם כסף = לינקדאין. אני מקבלת שם פניות קרות פעמיים ביום.'},{a:'אלמוג פישלר',t:'עבד לי. דרך פרופיל אישי. גם cold email — פוטנציאל אדיר.'}]},
+  {id:7,date:'23.2.26',topic:'biz',title:'דיון: "סוכן" vs "Agent" — מה הלקוח מבין?',summary:'דיון על שפה שיווקית מול שפה מקצועית.',msgs:[{a:'אלמוג פישלר',t:'מאוד מבלבל שיש אותו שם לשני דברים שונים.'},{a:'יניב בן לולו',t:'השם הנכון היחיד בשיווק = השם שהקהל שלך מבין. אם הם לא מבינים, פספסת.'},{a:'אהרון',t:'ללקוח לא איכפת אם זה בוט, סוכן או אייגנט. הוא רוצה לדעת מה זה עושה ומה הערך.'}]},
+  {id:8,date:'23.2.26',topic:'tech',title:'Coexistence מטא — בוט מספר קיים (הגיע לישראל!)',summary:'גיא: שבירת חוק הבלעדיות. עסק יכול לשמור המספר ולהיות בוט בו-זמנית.',msgs:[{a:'גיא',t:'גיים צ\'יינג\'ר! Coexistence שנפתח לישראל — מספר שמחובר ל-API יכול כעת לעבוד גם בוואטסאפ הרגיל.'},{a:'ענת',t:'Co-existence לא רלוונטי לי. פתרון הכי זול למספר חדש: סים 019 — 20 ש"ח + 30 ש"ח = חצי שנה.'}]},
+  {id:9,date:'24.2.26',topic:'tool',title:'Wispr Flow — הקלטה קונטקסטואלית לסלולר',summary:'שמואל שיתף אפליקציה שמבינה הקשרים, מנקה "אממ", עובדת עם בועית צפה.',msgs:[{a:'שמואל',t:'Wispr Flow — בועית צפה בכל מקום על המסך. קונטקסטואלי, מסנן "אממ". כל מה שכתבתי פה הקלטתי.'},{a:'אלמוג פישלר',t:'איך לא עשית לינק אפיליאציה? יש להם כזה...'}]},
+  {id:10,date:'25.2.26',topic:'biz',title:'סטורי-טלינג בפרומפטים — ארז',summary:'ארז: זה לא הנדסת פרומפטים, זה סטורי-טלינג. WSN framework לבניית סוכנים.',msgs:[{a:'ארז טל-שיר',t:'זה לא הנדסת פרומפטים — זה סטורי-טלינג. WSN: what, so what, now what. גורם ל-LLM להבין יותר טוב.'},{a:'שמואל',t:'זה הסטפ הבא — ראיה שונה לחלוטין של קונטקסט.'}]},
+  {id:11,date:'25.2.26',topic:'course',title:'לייב שאלות ותשובות עם ניצן',summary:'לייב ב-20:00. הקלטה עלתה לפורטל.',msgs:[{a:'יניב בן לולו',t:'לייב היום 20:00 עם ניצן — הזדמנות לשאול מה שבוער לכם.'},{a:'ניצן טהר לב',t:'כל הכבוד למי שהגיע. הקלטה תעלה מחר.'}]},
+  {id:12,date:'26.2.26',topic:'biz',title:'גיא — 100K חשיפות בלינקדאין + פייסבוק עקף בסיבוב',summary:'אותו פוסט: 100K בלינקדאין תוך שבוע וחצי. בפייסבוק עקף תוך 7 שעות.',msgs:[{a:'גיא',t:'פוסט הגיע ל-100,000 חשיפות ו-500 מגיבים. פרסמתי בפייסבוק — תוך 7 שעות עקף.'},{a:'גיא',t:'עדכון: לא צריך ממומן כרגע. נשאר רק אינסטגרם ותיקטוק.'}]},
+  {id:13,date:'27.2.26',topic:'course',title:'תסריטי מכירה בפורטל + קבוצת חימום מספרים',summary:'אריה הפנה לקורס "מכירות בגובה העיניים". ניצן שלח קבוצה לחימום מספרי WhatsApp.',msgs:[{a:'רומן',t:'יש לכם תסריט שיחת מכירה שעובד?'},{a:'אריה נרברג',t:'יש בפורטל תסריטים מהסוכנות עם 30% המרה — קורס "מכירות בגובה העיניים".'},{a:'ניצן טהר לב',t:'קבוצה לחימום מספרי WhatsApp: chat.whatsapp.com/BsszhXJKJjfEq243SSc80A'}]},
+  {id:14,date:'28.2.26',topic:'personal',title:'טראמפ ביטל שימוש ב-Anthropic בסוכנויות פדרליות',summary:'שמואל שיתף כתבה. אלמוג: "מפחדים מקלוד".',msgs:[{a:'שמואל',t:'טראמפ הורה לסוכנויות פדרליות להפסיק שימוש בטכנולוגיית אנטרופיק.'},{a:'אלמוג פישלר',t:'מפחדים מקלוד... או משוקע בחברה מתחרה.'}]},
+  {id:15,date:'1.3.26',topic:'course',title:'לוז לייבים — מרץ 2026',summary:'יניב פרסם לוז ל-4 לייבים החודש.',msgs:[{a:'יניב בן לולו',t:'04.3 | יניב — פיתוח אפליקציות מובייל (Claude Code + Antigravity)'},{a:'יניב בן לולו',t:'11.3 | ארז — סודות פרסום בלינקדאין'},{a:'יניב בן לולו',t:'18.3 | אהרון — Google Workspace ו-Co-Pilot לארגונים'},{a:'יניב בן לולו',t:'25.3 | יניב — שאלות ותשובות פתוח'}]},
+  {id:16,date:'2.3.26',topic:'biz',title:'ארז פיתח GEM לפילטר תקשורת בחירום לצוותים',summary:'20-25% מעזיבות עובדים נובעות מכשלי תקשורת. בוט שמסנן הודעות לפני שליחה.',msgs:[{a:'ארז טל-שיר',t:'בניתי GEM לפילטר בין ראש צוות לצוות בחירום — מסדר ניסוח, מדייק מסרים.'},{a:'ענת',t:'הצעה: לחבר לכלי תקשורת קיימים כ"תיקון ניסוח" שמוצג בזמן כתיבה.'}]},
+  {id:17,date:'3.3.26',topic:'course',title:'עדכונים גדולים בפורטל — ארגון מחדש + בוט AI חדש',summary:'יניב: ארגון מחדש של תכנים + בוט AI מבוסס RAG+Pinecone לשאלות טכניות.',msgs:[{a:'יניב בן לולו',t:'1. תוכן שיווק → קורס "שיווק וגיוס לקוחות"'},{a:'יניב בן לולו',t:'2. תוכן מכירות → קורס "מכירות בגובה העיניים"'},{a:'יניב בן לולו',t:'3. פרק על Airtable נוסף לקורס "בניית CRM לעסקים"'},{a:'יניב בן לולו',t:'4. בוט AI חדש בפורטל! מבוסס RAG + Pinecone. שאלו אותו כל שאלה טכנית.'},{a:'שירי מור אייזן',t:'ווואוווו (על הבוט!)'}]},
+  {id:18,date:'3.3.26',topic:'spirit',title:'ארז בנה אפליקציות לסיוע בחירום',summary:'ארז לקח אתגר: לבנות כל יום כלי שיסייע לאנשים בתקופת המלחמה.',msgs:[{a:'ארז טל-שיר',t:'anchor-mind-relief.lovable.app — להתמודדות עם סטרס מתמשך'},{a:'ארז טל-שיר',t:'hero-calm-zone.lovable.app — לוויסות ילדים ונוער בחירום, לפי מודל מעש"ה'},{a:'גיא',t:'ממש אהבתי! רק הקריאה לנשימה הייתי משאיר רק בחלק הראשון.'}]},
+  {id:19,date:'4.3.26',topic:'tool',title:'לייב Vibe Coding — Claude Code + Antigravity לאפליקציות מובייל',summary:'יניב הדגים פיתוח iOS/Android. דיון על RTL ותוספים לכרום.',msgs:[{a:'יניב בן לולו',t:'לייב: פיתוח אפליקציות מובייל ב-Claude Code ו-Antigravity.'},{a:'ליאור סבג',t:'לתיקון RTL ב-VS Code: multi-rtl.interact-ed.online (חינמי)'},{a:'גיא',t:'ממליץ על Aitool.co.il — תוסף VS Code לעברית, 300 ש"ח חד-פעמי.'},{a:'שי',t:'גרסה חינמית: github.com/GuyRonnen/rtl-for-vs-code-agents'}]},
+  {id:20,date:'5.3.26',topic:'biz',title:'LetsAI מגייסים — מרצים ויועצי הטמעה',summary:'הכרזת גיוס מ-LetsAI לחברות.',msgs:[{a:'נועם',t:'LetsAI מגייסים מרצים/מנחות ויועצי הטמעה לחברות. קו"ח: Maya@letsai.co.il'}]},
+  {id:21,date:'7.3.26',topic:'biz',title:'מדריך לבניית פרופיל לינקדאין',summary:'גיא פרסם מדריך מפורט. ארז הוסיף תובנות. הלייב על לינקדאין ב-11.3.',msgs:[{a:'גיא',t:'פרופיל לינקדאין: תמונה מקצועית, באנר עם מסר, "אודות" עם מילות מפתח. Add a note עם בקשת חברות.'},{a:'ארז טל-שיר',t:'הפרופיל הוא החלק הכי חשוב — הבאנר, ערך מוסף, בידול, קהל יעד.'},{a:'ארז טל-שיר',t:'השבוע סגרתי תהליך ליווי עסקי בלינקדאין. שמח לענות.'}]},
+  {id:22,date:'8.3.26',topic:'tool',title:'Make vs Claude Code — מה צריך? דיון מרכזי',summary:'מתי Make ומתי Vibe Coding? כל צד עם טיעונים חזקים.',msgs:[{a:'רומן',t:'עזבתי את Make. עדיף לרשום בכלים אחרים ולא לשלם פר פעולה.'},{a:'שירי מור אייזן',t:'שאלה אמיתית: למה צריך Make אם יש Claude Code? התשובה היחידה — אמון ויציבות.'},{a:'אלמוג פישלר',t:'Make = ויזואליות + דיבאגינג. כשיש נפילה אתה רואה בדיוק מה ולמה.'},{a:'רומן',t:'Vibe Coding עובד אם בונים חכם: הרבה טסטים, לוגים, התראות.'}]},
+  {id:23,date:'9.3.26',topic:'spirit',title:'יניב — "שגרה היא עוגן" — לבנות בזמן משבר',summary:'הודעה רגשית ומחזקת על המשמעות של המשך עשייה בתקופת חירום.',msgs:[{a:'יניב בן לולו',t:'שמירה על שגרת עשייה ולמידה מחזירה תחושת שליטה. שגרה היא עוגן — לנו כמו לילדים.'},{a:'יניב בן לולו',t:'נפתחה הזדמנות: לפתח רעיונות, לשפר מוצרים, לחשוב אסטרטגית. יזמות = גם לדעת לבנות כשמסביב מאטים.'}]},
+  {id:24,date:'9.3.26',topic:'tool',title:'כלים ליצירת סרטוני AI — השוואה',summary:'שני שאלה, כולם ענו. Higgsfield, HeyGen, Seedance, Weavy.',msgs:[{a:'שני',t:'יש כלי טוב ליצירת סרטוני AI?'},{a:'עדן',t:'Higgsfield — הכי מוביל.'},{a:'שירי מור אייזן',t:'Weavy — מאגד את כל המודלים, נרכש ע"י Figma.'},{a:'שירי מור אייזן',t:'לדיבוב עם התאמת שפתיים — HeyGen הכי טוב.'}]},
+  {id:25,date:'11.3.26',topic:'biz',title:'לייב ארז — סודות פרסום בלינקדאין',summary:'תובנה: ייצוא אנליטיקס שבועי לנוטבוק + טרגוט קונקשנים לפוסטים.',msgs:[{a:'ארז טל-שיר',t:'לייצא אנליטיקס פעם בשבוע לנוטבוק, להעתיק קונקשנים ולטרגט להם את הפוסטים.'},{a:'גיא',t:'לייב מצוין! הנגשת את הלינקדאין בצורה מדויקת. כבר הולך ליישם.'},{a:'ניצן טהר לב',t:'הקלטה עלתה לפורטל.'}]},
+  {id:26,date:'12.3.26',topic:'tool',title:'Timeless Skills — קוד פתוח + חיבור לקלוד קוד',summary:'גיא: Timeless פתחו Skills בקוד פתוח. CRM אוטומטי, סיכומים, דשבורדים מפגישות.',msgs:[{a:'גיא',t:'Timeless פתחו את ה-Skills כקוד פתוח, חיברו לקלוד קוד ו-OpenClaw. כל פגישה → CRM אוטומטי, סיכום שבועי.'},{a:'אלמוג פישלר',t:'מעדיף Fireflies, אבל Timeless נחשבת לחזקה ביותר לתמלול עברית.'},{a:'שמואל',t:'ברירת מחדל עברית. אם יצא באנגלית — "תרגם לעברית".'}]},
+  {id:27,date:'15.3.26',topic:'tech',title:'GPT Assistants מיועצים — לעבור ל-Responses API',summary:'OpenAI מפסיקה לתמוך ב-Assistants. יניב: לעבור ל-Responses.',msgs:[{a:'ענת',t:'OpenAI מפסיקים לתמוך ב-Assistants. מה לעשות עם בוט קיים?'},{a:'יניב בן לולו',t:'נעבור ל-Responses API — תגובות רגילות עם פרומפט שנטען מראש.'},{a:'יניב בן לולו',t:'אם פותחים חדש — תתחיל ישירות עם Responses. יחסוך מיגרציה.'}]},
+  {id:28,date:'15.3.26',topic:'personal',title:'המלצות מחשב נייד',summary:'קונצנזוס: MacBook Pro. גם ASUS VivoBook i7 הוזכר.',msgs:[{a:'שירי מור אייזן',t:'צריכה מחשב נייד שעומד בעומסים. Mac בסדר?'},{a:'יניב בן לולו',t:'Mac Pro M3 — מאוד מרוצה.'},{a:'אהרון',t:'Air M4 יצא עכשיו בפחות מ-5,000. מינימום: 16GB RAM, SSD 512, M2+.'},{a:'אלמוג פישלר',t:'MacBook Pro בלי להתלבט. עלות-תועלת הכי גדולה.'}]},
+  {id:29,date:'17.3.26',topic:'biz',title:'עסקים קטנים (וואן-וומאן-שואו) — שווה לעבוד?',summary:'שמואל שאל, אלמוג התלבט, שירי הגיעה להחלטה.',msgs:[{a:'שמואל',t:'מי מעוניין לעבוד עם עסקים זעירים? מתחיל בנושא אוטומציית אימיילים.'},{a:'אלמוג פישלר',t:'בהתלבטות: גמיש לעבוד איתם, אבל תחושה שהכסף יוצא להם מהכיס.'},{a:'גיא',t:'זה לא ענייננו — הכסף ממילא צריך לצאת. השאלה: עד כמה מוכן להתקדם?'},{a:'שירי מור אייזן',t:'הגעתי להחלטה: יש עסקים שהם קטנים לי מדי.'}]},
+  {id:30,date:'18.3.26',topic:'course',title:'לייב אהרון — Google Workspace ו-Co-Pilot לארגונים',summary:'לייב שמכוון לעבודה עם ארגונים בינוניים-גדולים.',msgs:[{a:'יניב בן לולו',t:'לייב היום 20:00 עם אהרון — תרבות ארגונית, Google Workspace ו-Co-Pilot.'},{a:'אהרון',t:'זה רק לחברה שמוכנים לקחת את עצמם לנקסט לבל. הולך להיות פרקטי.'}]},
+  {id:31,date:'19.3.26',topic:'spirit',title:'פרגון לשירי + נדב חזר מהמילואים',summary:'דורון פרגן לשירי על יום עיון. נדב שיתף מהמילואים בצפון.',msgs:[{a:'דורון',t:'שירי העבירה יום עיון לכירים בתעשייה פטרוכימית. אנשים שאמרו "ה-AI לא מביא תוצאות" — יצאו עם תוכניות לשינוי.'},{a:'דורון',t:'שירי, את אלופה אמיתית. היה תענוג לראות איך עושים את זה נכון!'},{a:'נדב',t:'גויסתי צו 8 מיום פרוץ המלחמה. במילואים עצימים בצפון, ללא טלפון רוב הזמן. מרגיש החמצה אבל גאה בתרומה. עם ישראל חי.'},{a:'ליאור סבג',t:'אלוף אתה! אם תצטרך סיכום שבועי של מה שהיה פה — אשמח להפעיל אייגנט.'}]}
+];
+
+const topicLabel = {tech:'טכנולוגיה',biz:'עסקי',tool:'כלי',personal:'אישי',course:'פורטל',spirit:'רוח'};
+const topicClass = {tech:'badge-tech',biz:'badge-biz',tool:'badge-tool',personal:'badge-personal',course:'badge-course',spirit:'badge-spirit'};
+
+let currentTopic = 'all';
+let currentSort = 'asc';
+
+function filterTopic(topic, btn) {
+  currentTopic = topic;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function sortEntries(val) { currentSort = val; render(); }
+
+function toggleRead(id, e) {
+  e.stopPropagation();
+  if (readSet.has(id)) { readSet.delete(id); } else { readSet.add(id); }
+  saveRead(readSet);
+  const entry = document.getElementById('e-' + id);
+  const btn = document.getElementById('cb-' + id);
+  if (entry) entry.classList.toggle('read', readSet.has(id));
+  if (btn) { btn.classList.toggle('checked', readSet.has(id)); btn.textContent = readSet.has(id) ? '✓' : ''; }
+  updateProgress();
+}
+
+function toggleBody(id) {
+  const body = document.getElementById('b-' + id);
+  const chev = document.getElementById('ch-' + id);
+  if (!body) return;
+  const v = body.classList.contains('visible');
+  body.classList.toggle('visible', !v);
+  if (chev) chev.classList.toggle('open', !v);
+}
+
+function updateProgress() {
+  const total = ENTRIES.length;
+  const done = readSet.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + total;
+}
+
+function render() {
+  let entries = ENTRIES.filter(e => currentTopic === 'all' || e.topic === currentTopic);
+  if (currentSort === 'desc') entries = [...entries].reverse();
+  document.getElementById('count-badge').textContent = entries.length + ' נושאים';
+  const nr = document.getElementById('no-results');
+  const tl = document.getElementById('timeline');
+  if (entries.length === 0) { tl.innerHTML = ''; nr.style.display = 'block'; return; }
+  nr.style.display = 'none';
+
+  tl.innerHTML = entries.map(e => {
+    const isRead = readSet.has(e.id);
+    const msgs = e.msgs.map(m => {
+      const k = Object.keys(AV).find(k => m.a.startsWith(k)) || 'default';
+      const a = AV[k];
+      return `<div class="msg"><div class="msg-avatar" style="background:${a.bg};color:${a.c}">${a.i}</div><div class="msg-content"><div class="msg-author">${m.a}</div><div class="msg-text">${m.t}</div></div></div>`;
+    }).join('');
+    return `
+<div class="entry${isRead?' read':''}" id="e-${e.id}">
+  <div class="entry-header">
+    <button class="check-btn${isRead?' checked':''}" id="cb-${e.id}" onclick="toggleRead(${e.id},event)" title="סמן כנקרא">${isRead?'✓':''}</button>
+    <div class="entry-right" onclick="toggleBody(${e.id})">
+      <span class="topic-badge ${topicClass[e.topic]}">${topicLabel[e.topic]}</span>
+      <div class="entry-meta">
+        <span class="entry-date">${e.date}</span>
+        <span class="entry-title">${e.title}</span>
+        <span class="entry-summary">${e.summary}</span>
+        <span class="read-tag">✓ נקרא</span>
+      </div>
+    </div>
+    <span class="chevron" id="ch-${e.id}" onclick="toggleBody(${e.id})">▼</span>
+  </div>
+  <div class="entry-body" id="b-${e.id}">
+    <div class="msg-list">${msgs}</div>
+  </div>
+</div>`;
+  }).join('');
+  updateProgress();
+}
+
+render();
+</script>
+</body>
+</html>
